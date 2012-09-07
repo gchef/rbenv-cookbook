@@ -34,12 +34,14 @@ if install
     require_recipe "rbenv::ruby_build" 
 
     # rehash so that shims will get created
-    execute "#{node[:rbenv][:dir]} #{node[:rbenv][:dir]}/bin/rbenv rehash; exit 0"
+    execute "RBENV_ROOT=#{node[:rbenv][:dir]} #{node[:rbenv][:dir]}/bin/rbenv rehash; exit 0"
 
+    # TODO only update if the gem has already been installed, otherwise
+    # install
     bash "Installing global gems" do
       code %{
         export PATH=#{node[:rbenv][:dir]}/shims:#{node[:rbenv][:dir]}/bin:$PATH
-        gem update #{node[:rbenv][:global_gems].join(' ')}
+        gem install #{node[:rbenv][:global_gems].join(' ')}
       }
     end
 
