@@ -28,7 +28,7 @@ if install
         if [[ ! $(ls #{node[:ruby_build][:install_dir]}) =~ #{ruby_version} ]]
         then
           export RUBY_BUILD_BUILD_PATH=#{node[:ruby_build][:keep_dir]}
-          #{node[:ruby_build][:dir]}/bin/ruby-build --keep #{ruby_version} #{node[:ruby_build][:install_dir]}/#{ruby_version}
+          #{node[:ruby_build][:dir]}/bin/ruby-build --keep #{ruby_version} #{node[:ruby_build][:install_dir]}/#{ruby_version} --with-openssl-dir=/usr
         fi
       }
       only_if { wan_up }
