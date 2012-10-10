@@ -1,5 +1,5 @@
 install = (node[:rbenv][:action] == "install")
-wan_up = `ping -c 1 -W 1 google.com`.index(/1 (?:packets )?received/)
+wan_up = `ping -c 1 -W 1 8.8.8.8`.index(/1 (?:packets )?received/)
 
 if install
   git node[:rbenv][:dir] do
