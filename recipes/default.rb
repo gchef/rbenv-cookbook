@@ -49,8 +49,8 @@ else
 end
 
 # Set up all users part of the ruby system group with rbenv
-node.fetch("system_users") { [] }.each do |system_user, system_user_properties|
-  if system_user_properties.fetch(:groups) { [] }.include?("rbenv")
+node.fetch("system_users", []).each do |system_user, system_user_properties|
+  if system_user_properties.fetch(:groups, []).include?("rbenv") && system_user_properties.fetch(:action, :create) != :delete
     rbenv_user system_user do
       action (install ? :create : :delete)
     end
