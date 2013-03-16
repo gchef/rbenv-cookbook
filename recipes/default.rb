@@ -24,7 +24,7 @@ if install
 
   if node[:ruby_build][:rubies].any? and wan_up
     # Builds all rubies, system-wide
-    require_recipe "rbenv::ruby_build" 
+    include_recipe "rbenv::ruby_build"
 
     # rehash so that shims will get created
     execute "RBENV_ROOT=#{node[:rbenv][:dir]} #{node[:rbenv][:dir]}/bin/rbenv rehash; exit 0"
