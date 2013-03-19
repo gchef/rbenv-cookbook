@@ -12,6 +12,7 @@ def manage_rbenv_user_profile
   if node.has_key?(:bootstrap)
     bootstrap_profile "rbenv" do
       username new_resource.name
+      home_basepath new_resource.home_basepath
       params rbenv_params
       action new_resource.action
     end
