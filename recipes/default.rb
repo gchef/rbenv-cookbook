@@ -61,6 +61,6 @@ if install
   # just in case bootstrap-cookbook is not available...
   group "rbenv"
 
-  execute "chmod -fR 755 #{node[:rbenv][:dir]}"
-  execute "chown -fR root.rbenv #{node[:rbenv][:dir]}"
+  execute "chmod -fR 775 #{node[:rbenv][:dir]}"
+  execute "chown -fR root:rbenv #{node[:rbenv][:dir]}"
 end
