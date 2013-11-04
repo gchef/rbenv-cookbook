@@ -23,7 +23,7 @@ of them from git repositories, feel free to overwrite this (it can be
 any git reference).
 
 If you'll include [bootstrap][4] into your cookbooks, all
-`:system\_users` that belong to the **rbenv** group will get rbenv setup
+`:system_users` that belong to the **rbenv** group will get rbenv setup
 in their user profile for free.  Check [`bootstrap_profile` provider][5]
 for implementation details.
 
