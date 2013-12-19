@@ -1,6 +1,13 @@
 install = (node[:rbenv][:action] == "install")
 wan_up = `host -W 1 google.com`.index(/has address/)
 
+rbenv_system_users = []
+node.fetch("system_users", []).each do |system_user, system_user_properties|
+  if system_user_properties.fetch(:groups, []).include?("rbenv") && system_user_properties.fetch(:action, :create) != :delete
+    rbenv_system_users << system_user
+  end
+end
+
 if install
   git node[:rbenv][:dir] do
     repository node[:rbenv][:repository]
@@ -41,26 +48,33 @@ if install
     # rehash again so that gem executables get set up correctly
     execute "RBENV_ROOT=#{node[:rbenv][:dir]} #{node[:rbenv][:dir]}/bin/rbenv rehash; exit 0"
   end
+
+  # just in case bootstrap-cookbook is not available...
+  group "rbenv" do
+    members rbenv_system_users
+  end
+
+  execute "chmod -fR 775 #{node[:rbenv][:dir]}"
+  execute "chown -fR root:rbenv #{node[:rbenv][:dir]}"
+
+  rbenv_system_users.each do |rbenv_system_user|
+    rbenv_user rbenv_system_user do
+      action :create
+    end
+  end
 else
   directory node[:rbenv][:dir] do
     recursive true
     action :delete
   end
-end
 
-# Set up all users part of the ruby system group with rbenv
-node.fetch("system_users", []).each do |system_user, system_user_properties|
-  if system_user_properties.fetch(:groups, []).include?("rbenv") && system_user_properties.fetch(:action, :create) != :delete
-    rbenv_user system_user do
-      action (install ? :create : :delete)
+  group "rbenv" do
+    action :remove
+  end
+
+  rbenv_system_users.each do |rbenv_system_user|
+    rbenv_user rbenv_system_user do
+      action :delete
     end
   end
-end
-
-if install
-  # just in case bootstrap-cookbook is not available...
-  group "rbenv"
-
-  execute "chmod -fR 775 #{node[:rbenv][:dir]}"
-  execute "chown -fR root:rbenv #{node[:rbenv][:dir]}"
 end
